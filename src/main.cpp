@@ -1,5 +1,15 @@
 #include "../lib/AGL/agl.hpp"
 
+class Voxel
+{
+	public:
+		agl::Vec<int, 3> position;
+
+		Voxel(agl::Vec<int, 3> position) : position(position)
+		{
+		}
+};
+
 int main()
 {
 	agl::RenderWindow window;
@@ -75,10 +85,16 @@ int main()
 	blank.setBlank();
 
 	agl::Cuboid cuboid;
-	cuboid.setColor(agl::Color::Cyan);
+	cuboid.setColor(agl::Color::White);
 	cuboid.setTexture(&blank);
 	cuboid.setPosition({0, 0, 0});
 	cuboid.setSize({1, 1, 1});
+
+	std::vector<Voxel> voxel;
+
+	voxel.emplace_back(agl::Vec<int, 3>{0, 0, 0});
+	voxel.emplace_back(agl::Vec<int, 3>{1, 0, 0});
+	voxel.emplace_back(agl::Vec<int, 3>{1, 0, 1});
 
 	while (!event.windowClose())
 	{
@@ -87,6 +103,13 @@ int main()
 		window.clear();
 
 		window.drawShape(cuboid);
+
+		for (Voxel &voxel : voxel)
+		{
+			cuboid.setPosition(voxel.position);
+
+			window.drawShape(cuboid);
+		}
 
 		window.display();
 
@@ -100,12 +123,12 @@ int main()
 			angle -= PI / 60;
 		}
 
-		if(event.isKeyPressed(XK_Up))
+		if (event.isKeyPressed(XK_Up))
 		{
 			scale /= 1.05;
 		}
-		
-		if(event.isKeyPressed(XK_Down))
+
+		if (event.isKeyPressed(XK_Down))
 		{
 			scale *= 1.05;
 		}
